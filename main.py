@@ -101,9 +101,13 @@ def check_booking():
     SHALL2 = "WSCACT0010"
 
     auth_token = get_jwt_token()
-    message = "These are the available sessions\n"
+    message = ""
     message +=check_available_sessions(SHALL1, auth_token, "Sports Hall 1")
     message +=check_available_sessions(SHALL2, auth_token, "Sports Hall 2")
+    if message == "":
+        message = "There are no available sessions"
+    else:
+        message = "These are the availble sessions\n" + message
     send_pushover_notification(message)
 
 check_booking()
