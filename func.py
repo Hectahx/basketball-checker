@@ -15,6 +15,27 @@ def send_pushover_notification(message, title):
     }
     requests.post(url, data=data)
 
+def send_discord_webhook(message, title):
+    url = os.getenv('discord_webhook_url')
+
+    data = {
+    "content" : "<@1043508862604554331>",
+    "username" : title
+    }
+
+    # for all params, see https://discordapp.com/developers/docs/resources/channel#embed-object
+    
+    data["embeds"] = [
+        {
+            "description" : message,
+            "title" : title
+        }
+    ]
+    
+
+    requests.post(url, json = data)
+
+
 def get_jwt_token():
     user = os.getenv("user")
     pw = os.getenv("pw")

@@ -37,19 +37,23 @@ def check_available_basketball_sessions(activity_id, auth_token, sports_hall_str
     # Set the timezone for UK (handles BST and GMT)
     uk_timezone = pytz.timezone('Europe/London')
 
-    for item in data['bookableItems']:
-        for slot in item['slots']:
-            # Convert the slot time from UTC to UK time
-            slot_time_utc = datetime.datetime.fromtimestamp(slot['sUTC']).replace(tzinfo=pytz.utc)
-            slot_time_uk = slot_time_utc.astimezone(uk_timezone)
+    try:
             
-            # Check if the slot is on the specified day (Monday)
-            if slot_time_uk.weekday() == target_day:
-                slot_seconds = slot_time_uk.hour * 3600 + slot_time_uk.minute * 60
-                # Check if the time is between 12 PM and 7 PM
-                if start_time <= slot_seconds <= end_time:
-                    # Check if the slot is available
-                    if slot['p'] != "" and slot['s'] == 1:
-                        message = f"{slot_time_uk.strftime('%A')} {slot_time_uk.strftime('%-d')}{'th' if 4<=slot_time_uk.day<=20 or 24<=slot_time_uk.day<=30 else {1: 'st', 2: 'nd', 3: 'rd'}.get(slot_time_uk.day % 10, 'th')} {slot_time_uk.strftime('%B %Y')} at {slot_time_uk.strftime('%H:%M')} in {sports_hall_str}"
-                        available_sessions += message + "\n"
-    return available_sessions
+        for item in data['bookableItems']:
+            for slot in item['slots']:
+                # Convert the slot time from UTC to UK time
+                slot_time_utc = datetime.datetime.fromtimestamp(slot['sUTC']).replace(tzinfo=pytz.utc)
+                slot_time_uk = slot_time_utc.astimezone(uk_timezone)
+                
+                # Check if the slot is on the specified day (Monday)
+                if slot_time_uk.weekday() == target_day:
+                    slot_seconds = slot_time_uk.hour * 3600 + slot_time_uk.minute * 60
+                    # Check if the time is between 12 PM and 7 PM
+                    if start_time <= slot_seconds <= end_time:
+                        # Check if the slot is available
+                        if slot['p'] != "" and slot['s'] == 1:
+                            message = f"{slot_time_uk.strftime('%A')} {slot_time_uk.strftime('%-d')}{'th' if 4<=slot_time_uk.day<=20 or 24<=slot_time_uk.day<=30 else {1: 'st', 2: 'nd', 3: 'rd'}.get(slot_time_uk.day % 10, 'th')} {slot_time_uk.strftime('%B %Y')} at {slot_time_uk.strftime('%H:%M')} in {sports_hall_str}"
+                            available_sessions += message + "\n"
+        return available_sessions
+    except:
+        return ""

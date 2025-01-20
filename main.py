@@ -5,6 +5,8 @@ import pytz # type: ignore
 from func import *
 from badminton import *
 from basketball import *
+import argparse
+
 
 def check_basketball_booking():
     SHALL1 = "WSCACT0009"
@@ -19,6 +21,8 @@ def check_basketball_booking():
     else:
         message = "These are the available sessions between 12pm and 7pm:\n\n" + message
     send_pushover_notification(message, "Basketball Sessions")
+    send_discord_webhook(message, "Basketball Sessions")
+    print(message)
 
 def check_badminton_booking():
     SHALL1 = "WSCACT0001"
@@ -32,6 +36,23 @@ def check_badminton_booking():
     else:
         message = "These are the availble sessions between 5pm and Close:\n\n" + message
     send_pushover_notification(message, "Badminton Sessions")
+    send_discord_webhook(message, "Badminton Sessions")
+    print(message)
 
-check_badminton_booking()
-check_basketball_booking()
+def main():
+    parser = argparse.ArgumentParser(description="Check sports bookings.")
+    parser.add_argument("sport", nargs="?", choices=["basketball", "badminton"],
+                        help="Specify which sport to check (basketball or badminton). If not specified, both will be checked.")
+    args = parser.parse_args()
+
+    if args.sport == "basketball":
+        check_basketball_booking()
+    elif args.sport == "badminton":
+        check_badminton_booking()
+    else:
+        check_badminton_booking()
+        check_basketball_booking()
+
+if __name__ == "__main__":
+    main()
+
