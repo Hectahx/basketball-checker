@@ -2,6 +2,8 @@
 __pycache__/
 *.py[cod]
 *$py.class
+booker.sqlite3
+booker.sqlite3-*
 
 # C extensions
 *.so
@@ -131,6 +133,11 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+# Node / frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/
 
 # Spyder project settings
 .spyderproject
