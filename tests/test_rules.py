@@ -99,7 +99,25 @@ def test_filter_slots_applies_max_price_when_present() -> None:
 
 def test_strict_preferred_time_does_not_fall_back_to_another_slot() -> None:
     rule = make_rule(preferred_start_time="16:30", allow_fallback=False)
-    assert filter_slots(rule, [make_slot(), make_slot(start_time_utc=1781951400, start_time_local=datetime(2026, 6, 20, 13, 30, tzinfo=ZoneInfo("Europe/London")))]) == [make_slot()]
+    earlier = make_slot(start_time_utc=1781951400, start_time_local=datetime(2026, 6, 20, 13, 30, tzinfo=ZoneInfo("Europe/London")))
+    assert select_slot_group(rule, filter_slots(rule, [earlier, make_slot()])) == [make_slot()]
+    assert select_slot_group(rule, filter_slots(rule, [earlier])) is None
+
+
+def test_strict_preferred_time_books_multi_hour_blocks() -> None:
+    # Regression: the second hour starts at 17:30, which must not be rejected
+    # for failing to match the 16:30 preference.
+    rule = make_rule(duration_minutes=120, preferred_start_time="16:30", allow_fallback=False)
+    first = make_slot()
+    second = make_slot(start_time_utc=first.start_time_utc + 3600, start_time_local=datetime(2026, 6, 20, 17, 30, tzinfo=ZoneInfo("Europe/London")))
+    assert select_slot_group(rule, filter_slots(rule, [first, second])) == [first, second]
+
+
+def test_fallback_prefers_the_closest_start() -> None:
+    rule = make_rule(preferred_start_time="16:30", allow_fallback=True)
+    early = make_slot(start_time_utc=1781951400, start_time_local=datetime(2026, 6, 20, 13, 30, tzinfo=ZoneInfo("Europe/London")))
+    close = make_slot(start_time_utc=1781958600, start_time_local=datetime(2026, 6, 20, 15, 30, tzinfo=ZoneInfo("Europe/London")))
+    assert select_slot_group(rule, filter_slots(rule, [early, close])) == [close]
 
 
 def test_select_slot_group_requires_consecutive_slots() -> None:
@@ -126,3 +144,58 @@ def test_booking_service_records_success_and_duplicate_identity(tmp_path: Path) 
 
     assert attempt.status == "success"
     assert service.has_successful_booking(slot) is True
+
+
+def _add_users(db_path: Path, *names: str) -> None:
+    import sqlite3
+    conn = sqlite3.connect(db_path)
+    for name in names:
+        conn.execute("INSERT INTO users (username, password_hash, role, enabled, created_at) VALUES (?, 'x', 'user', 1, 'now')", (name,))
+    conn.commit()
+    conn.close()
+
+
+def test_two_people_can_use_the_same_account_label(tmp_path: Path) -> None:
+    import pytest
+    import sqlite3
+    from app.accounts import AstonAccountStore
+
+    db_path = tmp_path / "booker.sqlite3"
+    init_db(db_path)
+    _add_users(db_path, "alice", "bob")
+    store = AstonAccountStore(make_settings(db_path))
+    store.create_private("My Aston account", "a", "pw", 1)
+    store.create_private("My Aston account", "b", "pw", 2)
+    with pytest.raises(sqlite3.IntegrityError):
+        store.create_private("My Aston account", "a2", "pw", 1)
+
+
+def test_old_global_label_constraint_is_migrated(tmp_path: Path) -> None:
+    import sqlite3
+    from app.accounts import AstonAccountStore
+
+    db_path = tmp_path / "booker.sqlite3"
+    init_db(db_path)
+    conn = sqlite3.connect(db_path)
+    conn.executescript(
+        """
+        PRAGMA foreign_keys = OFF;
+        DROP TABLE aston_accounts;
+        CREATE TABLE aston_accounts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, label TEXT NOT NULL,
+            credential_mode TEXT NOT NULL CHECK(credential_mode IN ('environment', 'stored')),
+            encrypted_username TEXT, encrypted_password TEXT,
+            created_by_user_id INTEGER NOT NULL, created_at TEXT NOT NULL, UNIQUE(label));
+        INSERT INTO users (username, password_hash, role, enabled, created_at) VALUES ('admin', 'x', 'admin', 1, 'now'), ('bob', 'x', 'user', 1, 'now');
+        INSERT INTO aston_accounts (label, credential_mode, created_by_user_id, created_at) VALUES ('Shared', 'environment', 1, 'now');
+        INSERT INTO aston_account_members VALUES (1, 1), (1, 2);
+        """
+    )
+    conn.close()
+
+    init_db(db_path)
+
+    store = AstonAccountStore(make_settings(db_path))
+    store.create_private("Shared", "b", "pw", 2)
+    assert store.can_use(1, 2) is True
+    assert store.shared_account()["id"] == 1

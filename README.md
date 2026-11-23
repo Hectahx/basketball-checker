@@ -1,6 +1,6 @@
-# Basketball Booker
+# Hall Pass
 
-Web app for checking Sport Aston availability, booking slots manually, and running configurable auto-booking rules.
+Web app for checking Sport Aston availability (basketball and badminton), booking slots by hand, and running auto-booking rules. It was previously called Basketball Booker. Product context is in `PRODUCT.md`; the visual system is in `DESIGN.md`.
 
 ## Backend
 
@@ -13,7 +13,7 @@ python run_web.py
 
 The API runs on `http://localhost:8000`. Set `APP_PASSWORD` in `.env`; if omitted, the development default is `admin`.
 
-On a new database, `APP_PASSWORD` creates the initial `admin` account (username: `admin`). Sign in there and use the **Users** tab to create regular user accounts. Rules, manual booking records, and history are private to the account that created them; admins can view all records. Each user chooses their desired days and time window in their own auto-booking rules.
+On a new database, `APP_PASSWORD` creates the initial `admin` account (username: `admin`). Sign in there and use the **People** tab to create regular user accounts. Rules, manual booking records, and history are private to the account that created them; admins can view all records. Each user chooses their desired days and time window in their own auto-booking rules.
 
 Each new user can use the admin's shared Aston account or add a private Aston account from **Accounts**. Private Aston credentials and Discord webhooks are encrypted at rest; set a strong `APP_SECRET` and preferably a distinct `CREDENTIAL_ENCRYPTION_KEY`. A rule can request 1–4 consecutive hourly slots and set a preferred start time. Preferred starts are strict by default, so a user whose preferred slot is unavailable does not take another user's preferred slot. Every provider slot is locked per Aston account before booking, preventing shared-account races.
 
@@ -27,11 +27,13 @@ npm install
 npm run dev
 ```
 
+The UI follows the system's light or dark setting.
+
 The UI runs on `http://localhost:5173` and talks to the backend at `http://localhost:8000`.
 
 ## Rules
 
-Rules are aggressive by design: when a rule runs, every available slot matching the selected sport, halls, days, time window, lookahead, and optional max price is booked immediately. The app records checks and booking attempts in SQLite.
+Rules are aggressive by design. Each run books one block (1–4 consecutive hours) that matches the rule's sport, halls, days, time window, lookahead and optional max price. The next run books another, until nothing matches. A preferred start is either strict (book nothing if it's taken) or falls back to the nearest time. Rules can be edited from the **Rules** page; deleting a rule keeps its history. The app records checks and booking attempts in SQLite.
 
 The scheduler runs once per minute and executes enabled rules whose `run_interval_minutes` has elapsed. Set `SCHEDULER_ENABLED=false` to disable background runs while testing.
 

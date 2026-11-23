@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
 import hashlib
+import logging
 import secrets
+import sqlite3
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from fastapi import Depends, FastAPI, HTTPException
@@ -11,7 +13,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .auth import CurrentUser, create_token, ensure_initial_admin, hash_password, require_auth, verify_password
 from .accounts import AstonAccountStore, encrypt_text
 from .config import Settings, get_settings
-from .database import get_conn, init_db, iso_now, row_to_dict
+from .database import decode_json, get_conn, init_db, iso_now, row_to_dict
 from .models import (
     AvailabilityResponse,
     AstonAccountCreate,
@@ -42,6 +44,11 @@ from .sports import SPORTS
 
 def create_app() -> FastAPI:
     settings = get_settings()
+    if settings.app_password == "admin" or settings.app_secret == "admin":
+        logging.getLogger("uvicorn.error").warning(
+            "APP_PASSWORD/APP_SECRET are using the development default 'admin'. "
+            "Anyone can sign in as admin and forge sessions. Set both in .env before sharing the app."
+        )
     init_db(settings.database_path)
     ensure_initial_admin(settings)
     with get_conn(settings.database_path) as conn:
@@ -155,26 +162,30 @@ def create_app() -> FastAPI:
 
     @app.post("/api/invites/accept", response_model=LoginResponse)
     def accept_invite(payload: InviteAccept, settings: Settings = Depends(get_settings)) -> LoginResponse:
+        accounts = AstonAccountStore(settings)
+        shared = accounts.shared_account()
         with get_conn(settings.database_path) as conn:
             invite = conn.execute("SELECT * FROM invitations WHERE token_hash = ?", (hashlib.sha256(payload.token.encode("utf-8")).hexdigest(),)).fetchone()
             if invite is None or invite["accepted_at"] is not None or datetime.fromisoformat(invite["expires_at"]) <= datetime.now(UTC):
                 raise HTTPException(status_code=400, detail="This invite is invalid or expired")
             if payload.use_shared_account and not invite["shared_access"]:
                 raise HTTPException(status_code=400, detail="This invite does not include shared Aston access")
+            if payload.use_shared_account and shared is None:
+                raise HTTPException(status_code=400, detail="The shared Aston account is not set up yet")
             if not payload.use_shared_account and (not payload.aston_username or not payload.aston_password):
                 raise HTTPException(status_code=400, detail="Private Aston credentials are required")
+            # Everything below happens in one transaction, so a failure cannot
+            # leave a half-created user or a spent invite behind.
             try:
                 cursor = conn.execute("INSERT INTO users (username, password_hash, role, enabled, created_at) VALUES (?, ?, 'user', 1, ?)", (payload.username, hash_password(payload.password), iso_now()))
             except Exception as exc:
                 raise HTTPException(status_code=409, detail="That username is already in use") from exc
             user_id = int(cursor.lastrowid)
             conn.execute("UPDATE invitations SET accepted_at = ? WHERE id = ?", (iso_now(), invite["id"]))
-        accounts = AstonAccountStore(settings)
-        if payload.use_shared_account:
-            shared = next(account for account in accounts.list_for_user(0, True) if account["credential_mode"] == "environment")
-            accounts.grant(shared["id"], user_id)
-        if payload.aston_username and payload.aston_password:
-            accounts.create_private(payload.private_account_label or "My Aston account", payload.aston_username, payload.aston_password, user_id)
+            if payload.use_shared_account:
+                conn.execute("INSERT OR IGNORE INTO aston_account_members (aston_account_id, user_id) VALUES (?, ?)", (shared["id"], user_id))
+            if payload.aston_username and payload.aston_password:
+                accounts.create_private(payload.private_account_label or "My Aston account", payload.aston_username, payload.aston_password, user_id, conn=conn)
         token, expires_at = create_token(settings, CurrentUser(id=user_id, username=payload.username, role="user"))
         return LoginResponse(token=token, expires_at=expires_at)
 
@@ -187,7 +198,10 @@ def create_app() -> FastAPI:
         # A member may add their own private Aston account; admins may create one
         # then grant it to an invited user below.
         owner_id = payload.member_user_id if current_user.is_admin and payload.member_user_id is not None else current_user.id
-        created = AstonAccountStore(settings).create_private(payload.label, payload.username, payload.password, owner_id)
+        try:
+            created = AstonAccountStore(settings).create_private(payload.label, payload.username, payload.password, owner_id)
+        except sqlite3.IntegrityError as exc:
+            raise HTTPException(status_code=409, detail="You already have an Aston account with that name") from exc
         return AstonAccountOut(**created)
 
     @app.post("/api/aston-accounts/{account_id}/members/{user_id}")
@@ -234,11 +248,27 @@ def create_app() -> FastAPI:
     def availability(
         sport: str = "basketball",
         lookahead_days: int = 10,
+        aston_account_id: int | None = None,
         current_user: CurrentUser = Depends(require_auth),
         settings: Settings = Depends(get_settings),
     ) -> AvailabilityResponse:
-        client = SportAstonClient(settings)
-        slots = client.get_availability(sport, lookahead_days)
+        if sport not in SPORTS:
+            raise HTTPException(status_code=404, detail="Unknown sport")
+        lookahead_days = max(1, min(lookahead_days, 31))
+        # Check with an account this user may use, not always the admin's.
+        store = AstonAccountStore(settings)
+        if aston_account_id is None:
+            usable = store.list_for_user(current_user.id, False)
+            if not usable:
+                raise HTTPException(status_code=400, detail="Add an Aston account before checking availability")
+            aston_account_id = usable[0]["id"]
+        elif not store.can_use(aston_account_id, current_user.id, current_user.is_admin):
+            raise HTTPException(status_code=403, detail="You cannot use that Aston account")
+        client = SportAstonClient(settings, store.credentials(aston_account_id))
+        try:
+            slots = client.get_availability(sport, lookahead_days)
+        except Exception as exc:
+            raise HTTPException(status_code=502, detail="Sport Aston did not respond. Try again in a minute.") from exc
         with get_conn(settings.database_path) as conn:
             conn.execute(
                 """
@@ -252,7 +282,8 @@ def create_app() -> FastAPI:
     @app.post("/api/bookings", response_model=BookingAttemptOut)
     def book(payload: BookingRequest, current_user: CurrentUser = Depends(require_auth), settings: Settings = Depends(get_settings)) -> BookingAttemptOut:
         slot = slot_from_booking_request(settings, payload)
-        accounts = AstonAccountStore(settings).list_for_user(current_user.id, current_user.is_admin)
+        # Default to an account this person is a member of, even for admins.
+        accounts = AstonAccountStore(settings).list_for_user(current_user.id, False)
         account_id = payload.aston_account_id or (accounts[0]["id"] if accounts else None)
         if account_id is None or not AstonAccountStore(settings).can_use(account_id, current_user.id, current_user.is_admin):
             raise HTTPException(status_code=403, detail="You cannot use that Aston account")
@@ -265,7 +296,7 @@ def create_app() -> FastAPI:
 
     @app.post("/api/rules", response_model=RuleOut)
     def create_rule(payload: RuleCreate, current_user: CurrentUser = Depends(require_auth), settings: Settings = Depends(get_settings)) -> RuleOut:
-        accounts = AstonAccountStore(settings).list_for_user(current_user.id, current_user.is_admin)
+        accounts = AstonAccountStore(settings).list_for_user(current_user.id, False)
         if payload.aston_account_id is None:
             if not accounts:
                 raise HTTPException(status_code=400, detail="No Aston account is available for this user")
@@ -285,7 +316,10 @@ def create_app() -> FastAPI:
 
     @app.delete("/api/rules/{rule_id}")
     def delete_rule(rule_id: int, current_user: CurrentUser = Depends(require_auth), settings: Settings = Depends(get_settings)) -> dict[str, str]:
-        RuleStore(settings, current_user.id, current_user.is_admin).delete_rule(rule_id)
+        try:
+            RuleStore(settings, current_user.id, current_user.is_admin).delete_rule(rule_id)
+        except KeyError:
+            raise HTTPException(status_code=404, detail="Rule not found")
         return {"status": "deleted"}
 
     @app.post("/api/rules/{rule_id}/run", response_model=RuleRunResponse)
@@ -300,7 +334,8 @@ def create_app() -> FastAPI:
         limit = max(1, min(limit, 500))
         with get_conn(settings.database_path) as conn:
             clause, params = ("", ()) if current_user.is_admin else (" WHERE user_id = ?", (current_user.id,))
-            attempts = conn.execute(f"SELECT * FROM booking_attempts{clause} ORDER BY id DESC LIMIT ?", (*params, limit)).fetchall()
+            attempt_clause = clause.replace("user_id", "a.user_id")
+            attempts = conn.execute(f"SELECT a.*, u.username FROM booking_attempts a LEFT JOIN users u ON u.id = a.user_id{attempt_clause} ORDER BY a.id DESC LIMIT ?", (*params, limit)).fetchall()
             checks = conn.execute(f"SELECT * FROM availability_checks{clause} ORDER BY id DESC LIMIT ?", (*params, limit)).fetchall()
         return HistoryResponse(
             booking_attempts=[_row_to_attempt(row) for row in attempts],
@@ -312,8 +347,29 @@ def create_app() -> FastAPI:
         limit = max(1, min(limit, 500))
         with get_conn(settings.database_path) as conn:
             clause, params = ("", ()) if current_user.is_admin else (" WHERE user_id = ?", (current_user.id,))
-            rows = conn.execute(f"SELECT id, user_id, aston_account_id, rule_id, start_time_local, duration_minutes, status, created_at FROM booking_holds{clause} ORDER BY created_at DESC LIMIT ?", (*params, limit)).fetchall()
-        return [HoldOut(**row_to_dict(row)) for row in rows]
+            hold_clause = clause.replace("user_id", "h.user_id")
+            rows = conn.execute(
+                f"""
+                SELECT h.id, h.user_id, u.username, h.aston_account_id, h.rule_id, r.name AS rule_name,
+                       h.start_time_local, h.duration_minutes, h.status, h.created_at, h.slot_identities
+                FROM booking_holds h
+                LEFT JOIN users u ON u.id = h.user_id
+                LEFT JOIN rules r ON r.id = h.rule_id
+                {hold_clause} ORDER BY h.start_time_local DESC LIMIT ?
+                """,
+                (*params, limit),
+            ).fetchall()
+            holds: list[HoldOut] = []
+            for row in rows:
+                data = row_to_dict(row)
+                identities = decode_json(data.pop("slot_identities"), [])
+                # Holds store slot identities only; the matching attempt has the names.
+                first = conn.execute(
+                    "SELECT sport, activity_name, bookable_item_name, price FROM booking_attempts WHERE slot_identity = ? AND status = 'success' ORDER BY id DESC LIMIT 1",
+                    (identities[0],),
+                ).fetchone() if identities else None
+                holds.append(HoldOut(**data, slot_identities=identities, **(row_to_dict(first) if first else {})))
+        return holds
 
     return app
 

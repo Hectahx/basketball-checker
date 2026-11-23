@@ -61,12 +61,19 @@ class InviteAccept(BaseModel):
 class HoldOut(BaseModel):
     id: str
     user_id: int
+    username: str | None = None
     aston_account_id: int | None
     rule_id: int | None
+    rule_name: str | None = None
     start_time_local: datetime
     duration_minutes: int
     status: str
     created_at: datetime
+    sport: str | None = None
+    activity_name: str | None = None
+    bookable_item_name: str | None = None
+    price: str | None = None
+    slot_identities: list[str] = Field(default_factory=list)
 
 
 class ActivityOut(BaseModel):
@@ -131,6 +138,7 @@ class BookingAttemptOut(BaseModel):
     source: str
     rule_id: int | None
     user_id: int | None = None
+    username: str | None = None
     response_type: str | None
     error: str | None
 
@@ -213,6 +221,12 @@ class RuleOut(RuleBase):
     updated_at: datetime
     last_run_at: datetime | None = None
     user_id: int | None = None
+    owner_username: str | None = None
+    last_check_status: str | None = None
+    last_check_at: datetime | None = None
+    last_check_slots: int | None = None
+    last_check_matched: int | None = None
+    last_check_error: str | None = None
 
 
 class AstonAccountOut(BaseModel):

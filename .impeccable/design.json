@@ -1,0 +1,702 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-22T14:06:10+00:00",
+  "title": "Design System: Hall Pass",
+  "extensions": {
+    "colorMeta": {
+      "surround": {
+        "role": "primary",
+        "displayName": "Court Surround Green",
+        "canonical": "oklch(0.37 0.065 163)",
+        "dark": "oklch(0.27 0.045 163)",
+        "tonalRamp": [
+          "oklch(0.15 0.018 163)",
+          "oklch(0.25 0.030 163)",
+          "oklch(0.35 0.041 163)",
+          "oklch(0.45 0.053 163)",
+          "oklch(0.55 0.065 163)",
+          "oklch(0.65 0.053 163)",
+          "oklch(0.78 0.038 163)",
+          "oklch(0.95 0.018 163)"
+        ]
+      },
+      "surround-deep": {
+        "role": "primary",
+        "displayName": "Deep Surround",
+        "canonical": "oklch(0.31 0.06 163)",
+        "dark": "oklch(0.22 0.04 163)",
+        "tonalRamp": [
+          "oklch(0.15 0.016 163)",
+          "oklch(0.25 0.027 163)",
+          "oklch(0.35 0.038 163)",
+          "oklch(0.45 0.049 163)",
+          "oklch(0.55 0.060 163)",
+          "oklch(0.65 0.049 163)",
+          "oklch(0.78 0.035 163)",
+          "oklch(0.95 0.016 163)"
+        ]
+      },
+      "surround-hover": {
+        "role": "primary",
+        "displayName": "Lit Surround",
+        "canonical": "oklch(0.43 0.07 163)",
+        "dark": "oklch(0.33 0.05 163)",
+        "tonalRamp": [
+          "oklch(0.15 0.019 163)",
+          "oklch(0.25 0.032 163)",
+          "oklch(0.35 0.045 163)",
+          "oklch(0.45 0.057 163)",
+          "oklch(0.55 0.070 163)",
+          "oklch(0.65 0.057 163)",
+          "oklch(0.78 0.041 163)",
+          "oklch(0.95 0.019 163)"
+        ]
+      },
+      "surround-ink": {
+        "role": "neutral",
+        "displayName": "Surround Ink",
+        "canonical": "oklch(0.97 0.012 160)",
+        "dark": "oklch(0.95 0.012 160)",
+        "tonalRamp": [
+          "oklch(0.15 0.003 160)",
+          "oklch(0.25 0.005 160)",
+          "oklch(0.35 0.008 160)",
+          "oklch(0.45 0.010 160)",
+          "oklch(0.55 0.012 160)",
+          "oklch(0.65 0.010 160)",
+          "oklch(0.78 0.007 160)",
+          "oklch(0.95 0.003 160)"
+        ]
+      },
+      "surround-muted": {
+        "role": "neutral",
+        "displayName": "Surround Muted",
+        "canonical": "oklch(0.82 0.035 160)",
+        "dark": "oklch(0.78 0.03 160)",
+        "tonalRamp": [
+          "oklch(0.15 0.010 160)",
+          "oklch(0.25 0.016 160)",
+          "oklch(0.35 0.022 160)",
+          "oklch(0.45 0.029 160)",
+          "oklch(0.55 0.035 160)",
+          "oklch(0.65 0.029 160)",
+          "oklch(0.78 0.020 160)",
+          "oklch(0.95 0.010 160)"
+        ]
+      },
+      "primary": {
+        "role": "primary",
+        "displayName": "Court Surround Green (action)",
+        "canonical": "oklch(0.37 0.065 163)",
+        "dark": "oklch(0.74 0.11 160)",
+        "tonalRamp": [
+          "oklch(0.15 0.018 163)",
+          "oklch(0.25 0.030 163)",
+          "oklch(0.35 0.041 163)",
+          "oklch(0.45 0.053 163)",
+          "oklch(0.55 0.065 163)",
+          "oklch(0.65 0.053 163)",
+          "oklch(0.78 0.038 163)",
+          "oklch(0.95 0.018 163)"
+        ],
+        "note": "Aliases surround in light; becomes a light mint in dark so actions read on the dark floor."
+      },
+      "primary-hover": {
+        "role": "primary",
+        "displayName": "Deep Surround (action hover)",
+        "canonical": "oklch(0.31 0.06 163)",
+        "dark": "oklch(0.8 0.1 160)",
+        "tonalRamp": [
+          "oklch(0.15 0.016 163)",
+          "oklch(0.25 0.027 163)",
+          "oklch(0.35 0.038 163)",
+          "oklch(0.45 0.049 163)",
+          "oklch(0.55 0.060 163)",
+          "oklch(0.65 0.049 163)",
+          "oklch(0.78 0.035 163)",
+          "oklch(0.95 0.016 163)"
+        ]
+      },
+      "primary-ink": {
+        "role": "neutral",
+        "displayName": "Surround Ink (on action)",
+        "canonical": "oklch(0.97 0.012 160)",
+        "dark": "oklch(0.2 0.03 160)",
+        "tonalRamp": [
+          "oklch(0.15 0.003 160)",
+          "oklch(0.25 0.005 160)",
+          "oklch(0.35 0.008 160)",
+          "oklch(0.45 0.010 160)",
+          "oklch(0.55 0.012 160)",
+          "oklch(0.65 0.010 160)",
+          "oklch(0.78 0.007 160)",
+          "oklch(0.95 0.003 160)"
+        ]
+      },
+      "floor": {
+        "role": "neutral",
+        "displayName": "Lacquered Maple",
+        "canonical": "oklch(0.82 0.085 74)",
+        "dark": "oklch(0.245 0.025 65)",
+        "tonalRamp": [
+          "oklch(0.15 0.023 74)",
+          "oklch(0.25 0.039 74)",
+          "oklch(0.35 0.054 74)",
+          "oklch(0.45 0.070 74)",
+          "oklch(0.55 0.085 74)",
+          "oklch(0.65 0.070 74)",
+          "oklch(0.78 0.049 74)",
+          "oklch(0.95 0.023 74)"
+        ]
+      },
+      "floor-raised": {
+        "role": "neutral",
+        "displayName": "Raised Maple",
+        "canonical": "oklch(0.865 0.07 77)",
+        "dark": "oklch(0.29 0.028 65)",
+        "tonalRamp": [
+          "oklch(0.15 0.019 77)",
+          "oklch(0.25 0.032 77)",
+          "oklch(0.35 0.045 77)",
+          "oklch(0.45 0.057 77)",
+          "oklch(0.55 0.070 77)",
+          "oklch(0.65 0.057 77)",
+          "oklch(0.78 0.041 77)",
+          "oklch(0.95 0.019 77)"
+        ]
+      },
+      "floor-sunk": {
+        "role": "neutral",
+        "displayName": "Sunk Maple",
+        "canonical": "oklch(0.775 0.09 72)",
+        "dark": "oklch(0.215 0.022 65)",
+        "tonalRamp": [
+          "oklch(0.15 0.025 72)",
+          "oklch(0.25 0.041 72)",
+          "oklch(0.35 0.057 72)",
+          "oklch(0.45 0.074 72)",
+          "oklch(0.55 0.090 72)",
+          "oklch(0.65 0.074 72)",
+          "oklch(0.78 0.052 72)",
+          "oklch(0.95 0.025 72)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Floor Ink",
+        "canonical": "oklch(0.23 0.03 60)",
+        "dark": "oklch(0.94 0.02 80)",
+        "tonalRamp": [
+          "oklch(0.15 0.008 60)",
+          "oklch(0.25 0.014 60)",
+          "oklch(0.35 0.019 60)",
+          "oklch(0.45 0.025 60)",
+          "oklch(0.55 0.030 60)",
+          "oklch(0.65 0.025 60)",
+          "oklch(0.78 0.017 60)",
+          "oklch(0.95 0.008 60)"
+        ]
+      },
+      "ink-muted": {
+        "role": "neutral",
+        "displayName": "Worn Ink",
+        "canonical": "oklch(0.39 0.045 62)",
+        "dark": "oklch(0.77 0.03 75)",
+        "tonalRamp": [
+          "oklch(0.15 0.012 62)",
+          "oklch(0.25 0.020 62)",
+          "oklch(0.35 0.029 62)",
+          "oklch(0.45 0.037 62)",
+          "oklch(0.55 0.045 62)",
+          "oklch(0.65 0.037 62)",
+          "oklch(0.78 0.026 62)",
+          "oklch(0.95 0.012 62)"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Floor Rule",
+        "canonical": "oklch(0.64 0.07 70)",
+        "dark": "oklch(0.45 0.03 65)",
+        "tonalRamp": [
+          "oklch(0.15 0.019 70)",
+          "oklch(0.25 0.032 70)",
+          "oklch(0.35 0.045 70)",
+          "oklch(0.45 0.057 70)",
+          "oklch(0.55 0.070 70)",
+          "oklch(0.65 0.057 70)",
+          "oklch(0.78 0.041 70)",
+          "oklch(0.95 0.019 70)"
+        ]
+      },
+      "rule-soft": {
+        "role": "neutral",
+        "displayName": "Soft Rule",
+        "canonical": "oklch(0.73 0.075 72)",
+        "dark": "oklch(0.35 0.03 65)",
+        "tonalRamp": [
+          "oklch(0.15 0.020 72)",
+          "oklch(0.25 0.034 72)",
+          "oklch(0.35 0.048 72)",
+          "oklch(0.45 0.061 72)",
+          "oklch(0.55 0.075 72)",
+          "oklch(0.65 0.061 72)",
+          "oklch(0.78 0.044 72)",
+          "oklch(0.95 0.020 72)"
+        ]
+      },
+      "boundary": {
+        "role": "neutral",
+        "displayName": "Boundary White",
+        "canonical": "oklch(0.985 0.008 90)",
+        "dark": "oklch(0.86 0.012 90)",
+        "tonalRamp": [
+          "oklch(0.15 0.002 90)",
+          "oklch(0.25 0.004 90)",
+          "oklch(0.35 0.005 90)",
+          "oklch(0.45 0.007 90)",
+          "oklch(0.55 0.008 90)",
+          "oklch(0.65 0.007 90)",
+          "oklch(0.78 0.005 90)",
+          "oklch(0.95 0.002 90)"
+        ]
+      },
+      "basketball": {
+        "role": "secondary",
+        "displayName": "Basketball Line Orange-Red",
+        "canonical": "oklch(0.56 0.17 38)",
+        "dark": "oklch(0.72 0.15 48)",
+        "tonalRamp": [
+          "oklch(0.15 0.046 38)",
+          "oklch(0.25 0.077 38)",
+          "oklch(0.35 0.108 38)",
+          "oklch(0.45 0.139 38)",
+          "oklch(0.55 0.170 38)",
+          "oklch(0.65 0.139 38)",
+          "oklch(0.78 0.099 38)",
+          "oklch(0.95 0.046 38)"
+        ]
+      },
+      "badminton": {
+        "role": "secondary",
+        "displayName": "Badminton Line Blue",
+        "canonical": "oklch(0.48 0.15 258)",
+        "dark": "oklch(0.72 0.12 255)",
+        "tonalRamp": [
+          "oklch(0.15 0.041 258)",
+          "oklch(0.25 0.068 258)",
+          "oklch(0.35 0.095 258)",
+          "oklch(0.45 0.123 258)",
+          "oklch(0.55 0.150 258)",
+          "oklch(0.65 0.123 258)",
+          "oklch(0.78 0.087 258)",
+          "oklch(0.95 0.041 258)"
+        ]
+      },
+      "on-line": {
+        "role": "neutral",
+        "displayName": "Line Ink",
+        "canonical": "oklch(0.99 0.005 90)",
+        "dark": "oklch(0.18 0.02 60)",
+        "tonalRamp": [
+          "oklch(0.15 0.001 90)",
+          "oklch(0.25 0.002 90)",
+          "oklch(0.35 0.003 90)",
+          "oklch(0.45 0.004 90)",
+          "oklch(0.55 0.005 90)",
+          "oklch(0.65 0.004 90)",
+          "oklch(0.78 0.003 90)",
+          "oklch(0.95 0.001 90)"
+        ]
+      },
+      "ok": {
+        "role": "tertiary",
+        "displayName": "Success Green",
+        "canonical": "oklch(0.45 0.11 155)",
+        "dark": "oklch(0.8 0.12 155)",
+        "tonalRamp": [
+          "oklch(0.15 0.030 155)",
+          "oklch(0.25 0.050 155)",
+          "oklch(0.35 0.070 155)",
+          "oklch(0.45 0.090 155)",
+          "oklch(0.55 0.110 155)",
+          "oklch(0.65 0.090 155)",
+          "oklch(0.78 0.064 155)",
+          "oklch(0.95 0.030 155)"
+        ]
+      },
+      "ok-soft": {
+        "role": "tertiary",
+        "displayName": "Success Green Soft",
+        "canonical": "oklch(0.90 0.05 155)",
+        "dark": "oklch(0.31 0.05 155)",
+        "tonalRamp": [
+          "oklch(0.15 0.014 155)",
+          "oklch(0.25 0.023 155)",
+          "oklch(0.35 0.032 155)",
+          "oklch(0.45 0.041 155)",
+          "oklch(0.55 0.050 155)",
+          "oklch(0.65 0.041 155)",
+          "oklch(0.78 0.029 155)",
+          "oklch(0.95 0.014 155)"
+        ]
+      },
+      "pay": {
+        "role": "tertiary",
+        "displayName": "Payment Amber",
+        "canonical": "oklch(0.45 0.1 68)",
+        "dark": "oklch(0.87 0.12 88)",
+        "tonalRamp": [
+          "oklch(0.15 0.027 68)",
+          "oklch(0.25 0.045 68)",
+          "oklch(0.35 0.064 68)",
+          "oklch(0.45 0.082 68)",
+          "oklch(0.55 0.100 68)",
+          "oklch(0.65 0.082 68)",
+          "oklch(0.78 0.058 68)",
+          "oklch(0.95 0.027 68)"
+        ]
+      },
+      "pay-soft": {
+        "role": "tertiary",
+        "displayName": "Payment Amber Soft",
+        "canonical": "oklch(0.91 0.1 92)",
+        "dark": "oklch(0.33 0.06 80)",
+        "tonalRamp": [
+          "oklch(0.15 0.027 92)",
+          "oklch(0.25 0.045 92)",
+          "oklch(0.35 0.064 92)",
+          "oklch(0.45 0.082 92)",
+          "oklch(0.55 0.100 92)",
+          "oklch(0.65 0.082 92)",
+          "oklch(0.78 0.058 92)",
+          "oklch(0.95 0.027 92)"
+        ]
+      },
+      "danger": {
+        "role": "tertiary",
+        "displayName": "Failure Crimson",
+        "canonical": "oklch(0.5 0.19 25)",
+        "dark": "oklch(0.79 0.13 25)",
+        "tonalRamp": [
+          "oklch(0.15 0.052 25)",
+          "oklch(0.25 0.086 25)",
+          "oklch(0.35 0.121 25)",
+          "oklch(0.45 0.155 25)",
+          "oklch(0.55 0.190 25)",
+          "oklch(0.65 0.155 25)",
+          "oklch(0.78 0.111 25)",
+          "oklch(0.95 0.052 25)"
+        ]
+      },
+      "danger-soft": {
+        "role": "tertiary",
+        "displayName": "Failure Crimson Soft",
+        "canonical": "oklch(0.93 0.045 25)",
+        "dark": "oklch(0.32 0.07 25)",
+        "tonalRamp": [
+          "oklch(0.15 0.012 25)",
+          "oklch(0.25 0.020 25)",
+          "oklch(0.35 0.029 25)",
+          "oklch(0.45 0.037 25)",
+          "oklch(0.55 0.045 25)",
+          "oklch(0.65 0.037 25)",
+          "oklch(0.78 0.026 25)",
+          "oklch(0.95 0.012 25)"
+        ]
+      },
+      "focus": {
+        "role": "tertiary",
+        "displayName": "Focus Blue",
+        "canonical": "oklch(0.48 0.15 258)",
+        "dark": "oklch(0.76 0.12 255)",
+        "tonalRamp": [
+          "oklch(0.15 0.041 258)",
+          "oklch(0.25 0.068 258)",
+          "oklch(0.35 0.095 258)",
+          "oklch(0.45 0.123 258)",
+          "oklch(0.55 0.150 258)",
+          "oklch(0.65 0.123 258)",
+          "oklch(0.78 0.087 258)",
+          "oklch(0.95 0.041 258)"
+        ],
+        "note": "Same value as the badminton line in light. A focus signal only, never a sport signal."
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display (scoreboard time)",
+        "purpose": "Start time in a court box; 2rem on phones."
+      },
+      "wordmark": {
+        "displayName": "Wordmark",
+        "purpose": "Hall Pass beside the court-diagram mark; 1.375rem in the mobile top bar."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Page titles; 1.5rem on phones and in the sign-in card."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Region headings; day headings and h3 at 1rem."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running text and page descriptions, about 65ch max."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Field labels, legends, nav items; buttons use this weight at 1rem."
+      },
+      "meta": {
+        "displayName": "Meta",
+        "purpose": "Chips, sport tags, owners, table headers, legends; hints step to 0.8125rem."
+      },
+      "numeral": {
+        "displayName": "Numeral",
+        "purpose": "Week-grid cells and column headers; phone time chips at 1.125rem/700."
+      }
+    },
+    "shadows": [
+      {
+        "name": "sign-in-lift",
+        "value": "0 18px 40px -18px oklch(0.15 0.04 160 / 0.6)",
+        "purpose": "Only the sign-in card over the surround."
+      },
+      {
+        "name": "tab-bar-lift",
+        "value": "0 -6px 18px -10px oklch(0.15 0.04 160 / 0.5)",
+        "purpose": "Only the mobile bottom tab bar."
+      },
+      {
+        "name": "switch-thumb",
+        "value": "0 1px 2px oklch(0 0 0 / 0.25)",
+        "purpose": "Contact shadow on the switch thumb."
+      },
+      {
+        "name": "active-nav-line",
+        "value": "inset 0 0 0 2px var(--boundary)",
+        "purpose": "Paints the boundary line around the current rail item."
+      },
+      {
+        "name": "selected-cell-line",
+        "value": "inset 0 0 0 3px var(--floor), inset 0 0 0 5px var(--sport-line)",
+        "purpose": "Doubled line on the selected court cell."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "All transitions and entrances."
+      },
+      {
+        "name": "control",
+        "value": "160ms",
+        "purpose": "Buttons, inputs, segments, rail items."
+      },
+      {
+        "name": "cell-and-switch",
+        "value": "180ms",
+        "purpose": "Court cells and the switch thumb and track."
+      },
+      {
+        "name": "notice-in",
+        "value": "220ms, translateY(-4px) and fade",
+        "purpose": "Notices and the slot-detail panel entering."
+      },
+      {
+        "name": "skeleton-pulse",
+        "value": "1.4s ease-in-out infinite",
+        "purpose": "Loading skeletons."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "1ms",
+        "purpose": "All animation and transition durations under prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "overview-stack",
+        "value": "1100px",
+        "purpose": "Overview becomes one column."
+      },
+      {
+        "name": "forms-stack",
+        "value": "900px",
+        "purpose": "Settings and form grids become one column."
+      },
+      {
+        "name": "mobile",
+        "value": "760px",
+        "purpose": "Top bar, bottom tab bar, edge-to-edge court, per-day time chips."
+      }
+    ],
+    "colorScheme": {
+      "light": "default :root in frontend/src/styles.css",
+      "dark": "prefers-color-scheme: dark block in frontend/src/styles.css; per-token values in colorMeta.*.dark"
+    },
+    "fonts": {
+      "source": "frontend/src/fonts.css (self-hosted, SIL OFL)",
+      "Barlow": [
+        400,
+        500,
+        600,
+        700
+      ],
+      "Barlow Condensed": [
+        500,
+        600,
+        700
+      ]
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one main action per view, in surround green.",
+      "html": "<button class=\"ds-btn-primary\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M16 19h6\"/><path d=\"M16 2v4\"/><path d=\"M19 16v6\"/><path d=\"M21 12.598V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8.5\"/><path d=\"M3 10h18\"/><path d=\"M8 2v4\"/></svg> Book a session</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem; min-height: 2.5rem; padding: 0.45rem 0.95rem; border: 1.5px solid transparent; border-radius: var(--radius); font-family: var(--font-ui); font-size: 1rem; font-weight: 600; line-height: 1.1; white-space: nowrap; cursor: pointer; transition: background-color 160ms var(--ease-out), border-color 160ms var(--ease-out), color 160ms var(--ease-out); background: var(--primary); color: var(--primary-ink); } .ds-btn-primary:hover { background: var(--primary-hover); } .ds-btn-primary:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; } .ds-btn-primary:active { transform: translateY(1px); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Supporting actions such as Refresh, on raised maple.",
+      "html": "<button class=\"ds-btn-secondary\">Refresh</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem; min-height: 2.5rem; padding: 0.45rem 0.95rem; border: 1.5px solid transparent; border-radius: var(--radius); font-family: var(--font-ui); font-size: 1rem; font-weight: 600; line-height: 1.1; white-space: nowrap; cursor: pointer; transition: background-color 160ms var(--ease-out), border-color 160ms var(--ease-out), color 160ms var(--ease-out); border-color: var(--rule); background: var(--floor-raised); color: var(--ink); } .ds-btn-secondary:hover { border-color: var(--ink-muted); } .ds-btn-secondary:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; } .ds-btn-secondary:active { transform: translateY(1px); }"
+    },
+    {
+      "name": "Quiet Danger Button",
+      "kind": "button",
+      "refersTo": "button-danger-quiet",
+      "description": "Destructive action that arms on first click and confirms on the second.",
+      "html": "<button class=\"ds-btn-danger\">Delete rule</button> <button class=\"ds-btn-danger is-armed\">Click again to confirm</button>",
+      "css": ".ds-btn-danger { display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem; min-height: 2.5rem; padding: 0.45rem 0.95rem; border: 1.5px solid transparent; border-radius: var(--radius); font-family: var(--font-ui); font-size: 1rem; font-weight: 600; line-height: 1.1; white-space: nowrap; cursor: pointer; transition: background-color 160ms var(--ease-out), border-color 160ms var(--ease-out), color 160ms var(--ease-out); border-color: var(--rule-soft); background: transparent; color: var(--danger); } .ds-btn-danger:hover, .ds-btn-danger.is-armed { border-color: var(--danger); background: var(--danger-soft); } .ds-btn-danger:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Labelled input on raised maple with a hint below.",
+      "html": "<label class=\"ds-field\"><span>Max price per hour</span><input class=\"ds-input\" type=\"text\" placeholder=\"£30.00\"><small>Leave empty for any price.</small></label>",
+      "css": ".ds-field { display: grid; gap: 0.3rem; font-family: var(--font-ui); color: var(--ink); max-width: 18rem; } .ds-field > span { font-size: 0.875rem; font-weight: 600; } .ds-field small { color: var(--ink-muted); font-size: 0.8125rem; } .ds-input { min-height: 2.5rem; width: 100%; padding: 0.45rem 0.7rem; border: 1.5px solid var(--rule); border-radius: var(--radius); background: var(--floor-raised); color: var(--ink); font: inherit; transition: border-color 160ms var(--ease-out); } .ds-input::placeholder { color: var(--ink-muted); } .ds-input:hover { border-color: var(--ink-muted); } .ds-input:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }"
+    },
+    {
+      "name": "Sport Segmented Choice",
+      "kind": "chip",
+      "refersTo": "segment-sport-selected-basketball",
+      "description": "Joined native radios; the sport choice fills with its line colour.",
+      "html": "<div class=\"ds-seg\"><button class=\"ds-seg-item\" data-sport=\"basketball\" aria-pressed=\"true\">Basketball</button><button class=\"ds-seg-item\" data-sport=\"badminton\" aria-pressed=\"false\">Badminton</button></div>",
+      "css": ".ds-seg { display: flex; font-family: var(--font-ui); } .ds-seg-item { --line: var(--basketball); min-height: 2.5rem; margin-left: -1.5px; padding: 0.4rem 0.85rem; border: 1.5px solid var(--rule); border-radius: 0; background: var(--floor-raised); color: var(--ink); font: inherit; font-weight: 600; cursor: pointer; transition: background-color 160ms var(--ease-out), color 160ms var(--ease-out), border-color 160ms var(--ease-out); } .ds-seg-item[data-sport=\"badminton\"] { --line: var(--badminton); } .ds-seg-item:first-child { margin-left: 0; border-radius: var(--radius) 0 0 var(--radius); } .ds-seg-item:last-child { border-radius: 0 var(--radius) var(--radius) 0; } .ds-seg-item:hover { border-color: var(--ink-muted); } .ds-seg-item[aria-pressed=\"true\"] { position: relative; border-color: var(--line); background: var(--line); color: var(--on-line); } .ds-seg-item:focus-visible { position: relative; z-index: 1; outline: 3px solid var(--focus); outline-offset: 2px; }"
+    },
+    {
+      "name": "Status Chips",
+      "kind": "chip",
+      "refersTo": "chip-pay",
+      "description": "Status always pairs colour with an icon: amber to pay, green ok, crimson failed.",
+      "html": "<span class=\"ds-chip\" data-tone=\"pay\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\"/><path d=\"M12 9v4\"/><path d=\"M12 17h.01\"/></svg> Pay in Sport Aston</span> <span class=\"ds-chip\" data-tone=\"ok\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"m9 12 2 2 4-4\"/></svg> Checked 2 minutes ago</span> <span class=\"ds-chip\" data-tone=\"danger\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"m15 9-6 6\"/><path d=\"m9 9 6 6\"/></svg> Check failed</span> <span class=\"ds-chip\">Paused</span>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.12rem 0.5rem; border: 1px solid var(--rule-soft); border-radius: 3px; background: var(--floor-sunk); color: var(--ink-muted); font-family: var(--font-ui); font-size: 0.875rem; font-weight: 500; line-height: 1.35; white-space: nowrap; } .ds-chip[data-tone=\"pay\"] { border-color: color-mix(in oklch, var(--pay) 40%, transparent); background: var(--pay-soft); color: var(--pay); } .ds-chip[data-tone=\"ok\"] { border-color: color-mix(in oklch, var(--ok) 35%, transparent); background: var(--ok-soft); color: var(--ok); } .ds-chip[data-tone=\"danger\"] { border-color: color-mix(in oklch, var(--danger) 35%, transparent); background: var(--danger-soft); color: var(--danger); }"
+    },
+    {
+      "name": "Rail Navigation",
+      "kind": "nav",
+      "refersTo": "nav-item-active",
+      "description": "Green rail; the current page is outlined by a painted boundary line.",
+      "html": "<nav class=\"ds-rail\"><a href=\"#\" aria-current=\"page\">Court time</a><a href=\"#\">Book</a><a href=\"#\">Rules</a></nav>",
+      "css": ".ds-rail { display: grid; gap: 0.25rem; width: 15rem; padding: 1rem; background: var(--surround); font-family: var(--font-ui); } .ds-rail a { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.75rem; border-radius: var(--radius); color: var(--surround-muted); font-weight: 600; text-decoration: none; transition: background-color 160ms var(--ease-out), color 160ms var(--ease-out), box-shadow 160ms var(--ease-out); } .ds-rail a:hover { background: var(--surround-hover); color: var(--surround-ink); } .ds-rail a[aria-current=\"page\"] { color: var(--surround-ink); box-shadow: inset 0 0 0 2px var(--boundary); } .ds-rail a:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }"
+    },
+    {
+      "name": "Court Box",
+      "kind": "card",
+      "refersTo": "court-box",
+      "description": "A held session: square, outlined in the sport line, with a scoreboard time.",
+      "html": "<div class=\"ds-court-box\" data-sport=\"basketball\"><div class=\"ds-court-time\"><span class=\"ds-time-big\">13:30</span><span class=\"ds-time-end\">to 15:30</span></div><div class=\"ds-court-detail\"><strong>Sat 28 Nov</strong><span>Sports Hall 1</span><span class=\"ds-court-meta\"><span class=\"ds-sport-tag\"><span class=\"ds-sport-line\"></span>Basketball</span><span>2 hours</span><span>£30.00/hr</span></span></div><span class=\"ds-chip\" data-tone=\"pay\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\"/><path d=\"M12 9v4\"/><path d=\"M12 17h.01\"/></svg> Pay in Sport Aston</span></div>",
+      "css": ".ds-court-box { --line: var(--basketball); display: grid; grid-template-columns: 6.25rem minmax(0, 1fr) auto; align-items: center; gap: 0.5rem 1.25rem; padding: 0.9rem 1.15rem; border: 2px solid var(--line); background: var(--floor-raised); color: var(--ink); font-family: var(--font-ui); max-width: 40rem; } .ds-court-box[data-sport=\"badminton\"] { --line: var(--badminton); } .ds-court-time { display: grid; line-height: 1; } .ds-time-big { font-family: var(--font-numerals); font-size: 2.5rem; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; } .ds-time-end { margin-top: 0.3rem; color: var(--ink-muted); font-size: 0.8125rem; font-variant-numeric: tabular-nums; } .ds-court-detail { display: grid; gap: 0.15rem; min-width: 0; } .ds-court-detail strong { font-size: 1.0625rem; } .ds-court-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.2rem 0.9rem; color: var(--ink-muted); font-size: 0.875rem; } .ds-sport-tag { display: inline-flex; align-items: center; gap: 0.35rem; font-weight: 500; } .ds-sport-line { display: inline-block; width: 1.1rem; height: 3px; background: var(--line); } .ds-chip { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.12rem 0.5rem; border: 1px solid var(--rule-soft); border-radius: 3px; background: var(--floor-sunk); color: var(--ink-muted); font-family: var(--font-ui); font-size: 0.875rem; font-weight: 500; line-height: 1.35; white-space: nowrap; } .ds-chip[data-tone=\"pay\"] { border-color: color-mix(in oklch, var(--pay) 40%, transparent); background: var(--pay-soft); color: var(--pay); } .ds-chip[data-tone=\"ok\"] { border-color: color-mix(in oklch, var(--ok) 35%, transparent); background: var(--ok-soft); color: var(--ok); } .ds-chip[data-tone=\"danger\"] { border-color: color-mix(in oklch, var(--danger) 35%, transparent); background: var(--danger-soft); color: var(--danger); }"
+    },
+    {
+      "name": "Week Grid Cells",
+      "kind": "custom",
+      "refersTo": "court-cell-free",
+      "description": "Free, yours, someone else's, none, and selected marks from the Book grid.",
+      "html": "<div class=\"ds-cells\" data-sport=\"basketball\"><button class=\"ds-cell\" data-state=\"free\">H1 H2</button><button class=\"ds-cell\" data-state=\"mine\">Yours · 2h</button><button class=\"ds-cell\" data-state=\"theirs\">jordan</button><span class=\"ds-cell\" data-state=\"none\"></span><button class=\"ds-cell\" data-state=\"free\" aria-pressed=\"true\">H2</button></div>",
+      "css": ".ds-cells { --line: var(--basketball); display: grid; grid-template-columns: repeat(5, 4.75rem); gap: 4px; padding: 1rem; background: var(--floor); } .ds-cells[data-sport=\"badminton\"] { --line: var(--badminton); } .ds-cell { display: grid; place-items: center; min-height: 2.75rem; padding: 0.25rem 0.4rem; border: 2px solid var(--line); border-radius: 0; background: transparent; color: var(--ink); font-family: var(--font-numerals); font-size: 0.9375rem; font-weight: 600; line-height: 1.1; white-space: nowrap; cursor: pointer; transition: background-color 180ms var(--ease-out), color 180ms var(--ease-out), box-shadow 180ms var(--ease-out); } .ds-cell[data-state=\"free\"]:hover { background: color-mix(in oklch, var(--line) 14%, transparent); } .ds-cell[data-state=\"mine\"] { background: var(--line); color: var(--on-line); } .ds-cell[data-state=\"theirs\"] { border-style: dashed; border-color: var(--rule); color: var(--ink-muted); } .ds-cell[data-state=\"none\"] { border: 1px dotted var(--rule-soft); cursor: default; } .ds-cell[aria-pressed=\"true\"] { box-shadow: inset 0 0 0 3px var(--floor), inset 0 0 0 5px var(--line); background: color-mix(in oklch, var(--line) 10%, transparent); } .ds-cell:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }"
+    },
+    {
+      "name": "Switch",
+      "kind": "custom",
+      "refersTo": "switch-track-on",
+      "description": "Rule on/off: round track, boundary-white thumb, green when on.",
+      "html": "<label class=\"ds-switch\"><input type=\"checkbox\" role=\"switch\" checked><span class=\"ds-track\"><span class=\"ds-thumb\"></span></span><span>Rule on</span></label>",
+      "css": ".ds-switch { display: inline-flex; align-items: center; gap: 0.65rem; font-family: var(--font-ui); font-weight: 600; color: var(--ink); cursor: pointer; } .ds-switch input { position: absolute; opacity: 0; width: 1px; height: 1px; } .ds-track { display: flex; align-items: center; width: 2.5rem; height: 1.45rem; padding: 2px; border-radius: 999px; background: var(--rule); transition: background-color 180ms var(--ease-out); } .ds-thumb { width: calc(1.45rem - 4px); height: calc(1.45rem - 4px); border-radius: 50%; background: var(--boundary); box-shadow: 0 1px 2px oklch(0 0 0 / 0.25); transition: transform 180ms var(--ease-out); } .ds-switch input:checked + .ds-track { background: var(--primary); } .ds-switch input:checked + .ds-track .ds-thumb { transform: translateX(calc(2.5rem - 1.45rem)); } .ds-switch input:focus-visible + .ds-track { outline: 3px solid var(--focus); outline-offset: 2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Multi-Sport Hall Floor",
+    "overview": "Hall Pass is drawn as the floor of a shared sports hall. The app shell is the deep green painted surround outside the playing area. The work area is lacquered maple, edged by a white boundary line. Each sport keeps its own painted line colour, and booked time is drawn as a court box: a rectangle outlined in that sport's line. You should be able to read whether you have court time, and whether the robot worked, from the floor markings alone.\n\nIt is dense and direct. Regions sit on the maple and are separated by painted white lines, never boxed in floating cards. Times are set large in a condensed sports face with tabular figures, like a scoreboard. Colour is functional: green is the building, maple is where you work, orange-red and blue mark sport, amber means \"pay for this in Sport Aston\", and crimson with an icon means something failed. The system rejects the grey SaaS card dashboard.\n\nLight and dark schemes follow `prefers-color-scheme`. In dark, the surround deepens, the maple becomes a dark stained floor, and the sport lines and status colours lift in lightness so they still read as paint.",
+    "keyCharacteristics": [
+      "Green surround shell, maple work surface, 2px white boundary line between them.",
+      "Sport is shown by line colour, never by fill alone (except your own booked cells).",
+      "Square court geometry for anything that represents court time; 4px corners only on controls.",
+      "Barlow for the interface, Barlow Condensed with tabular figures for times and numerals.",
+      "Flat: depth comes from tonal floor layers and painted lines, not shadows."
+    ],
+    "rules": [
+      {
+        "name": "The Painted Line Rule",
+        "body": "Basketball orange-red and badminton blue mark sport and nothing else. They appear as outlines, the sport-tag line, the sport choice segment, and the fill of your own booked cells. Never use them for buttons, headings, links or status.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Signals Rule",
+        "body": "Amber always means \"awaiting payment in Sport Aston\". Crimson always means failure and always comes with an icon (circle-x in chips and notices). A Sport Aston outage must read as crimson failure, never as an empty, neutral \"nothing available\".",
+        "section": "colors"
+      },
+      {
+        "name": "The Surround Rule",
+        "body": "Green is the building, not decoration. On the maple it appears only as the primary action, a selected non-sport choice, or a switch that is on.",
+        "section": "colors"
+      },
+      {
+        "name": "The Scoreboard Rule",
+        "body": "Times, dates in the grid and other numerals are set in Barlow Condensed with tabular figures. Prose and controls stay in Barlow. Time and number inputs and numeric table cells also use tabular figures.",
+        "section": "typography"
+      },
+      {
+        "name": "The Sentence Case Rule",
+        "body": "Labels, headings, buttons and chips are sentence case at normal tracking. The system has no uppercase or letter-spaced label style.",
+        "section": "typography"
+      },
+      {
+        "name": "The Painted Floor Rule",
+        "body": "No surface on the maple casts a shadow; the switch thumb's 1px contact shadow is the only one. To separate a surface, change its floor tone or draw a line. Inset box-shadows are used only to paint lines (the active rail item, the selected court cell).",
+        "section": "elevation"
+      },
+      {
+        "name": "The Court Line Rule",
+        "body": "Court time is a square box with a 2px line. Never round a court box or cell, and never give it a fill-plus-shadow card treatment.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "**Do** separate regions on the maple with 2px boundary-white lines and padding, not cards.",
+      "**Do** outline anything that represents court time in its sport's line colour at 2px, square.",
+      "**Do** set times and numerals in Barlow Condensed with tabular figures.",
+      "**Do** pair every status colour with an icon, and keep amber for \"pay in Sport Aston\" and crimson for failure.",
+      "**Do** use dashed lines for \"not in play\" (paused, held by someone else) and dotted lines for \"no session\".",
+      "**Do** keep one primary action per view, in surround green.",
+      "**Do** confirm destructive actions with the two-click armed button rather than a modal.",
+      "**Do** keep motion short on the ease-out curve (160 to 220ms) and honour reduced motion."
+    ],
+    "donts": [
+      "**Don't** build grey SaaS card dashboards: no floating white cards, no drop shadows on maple surfaces.",
+      "**Don't** use the basketball or badminton line colours for anything except marking sport.",
+      "**Don't** show a Sport Aston outage or login failure as an empty, neutral state.",
+      "**Don't** round court boxes, grid cells or rule rows.",
+      "**Don't** add uppercase, letter-spaced labels above headings."
+    ]
+  }
+}

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import base64
 import hashlib
+import sqlite3
 import uuid
 from datetime import timedelta
 
@@ -84,16 +85,24 @@ class AstonAccountStore:
         with get_conn(self.settings.database_path) as conn:
             conn.execute("INSERT OR IGNORE INTO aston_account_members (aston_account_id, user_id) VALUES (?, ?)", (account_id, user_id))
 
-    def create_private(self, label: str, username: str, password: str, owner_user_id: int) -> dict:
-        cipher = _cipher(self.settings)
+    def shared_account(self) -> dict | None:
         with get_conn(self.settings.database_path) as conn:
-            cursor = conn.execute(
-                "INSERT INTO aston_accounts (label, credential_mode, encrypted_username, encrypted_password, created_by_user_id, created_at) VALUES (?, 'stored', ?, ?, ?, ?)",
-                (label, cipher.encrypt(username.encode("utf-8")).decode("ascii"), cipher.encrypt(password.encode("utf-8")).decode("ascii"), owner_user_id, iso_now()),
-            )
-            account_id = int(cursor.lastrowid)
-            conn.execute("INSERT INTO aston_account_members (aston_account_id, user_id) VALUES (?, ?)", (account_id, owner_user_id))
-            row = conn.execute("SELECT * FROM aston_accounts WHERE id = ?", (account_id,)).fetchone()
+            row = conn.execute("SELECT * FROM aston_accounts WHERE credential_mode = 'environment' ORDER BY id LIMIT 1").fetchone()
+        return row_to_dict(row) if row else None
+
+    def create_private(self, label: str, username: str, password: str, owner_user_id: int, conn: sqlite3.Connection | None = None) -> dict:
+        """Store an encrypted private account. Pass ``conn`` to join a caller's transaction."""
+        if conn is None:
+            with get_conn(self.settings.database_path) as own_conn:
+                return self.create_private(label, username, password, owner_user_id, conn=own_conn)
+        cipher = _cipher(self.settings)
+        cursor = conn.execute(
+            "INSERT INTO aston_accounts (label, credential_mode, encrypted_username, encrypted_password, created_by_user_id, created_at) VALUES (?, 'stored', ?, ?, ?, ?)",
+            (label, cipher.encrypt(username.encode("utf-8")).decode("ascii"), cipher.encrypt(password.encode("utf-8")).decode("ascii"), owner_user_id, iso_now()),
+        )
+        account_id = int(cursor.lastrowid)
+        conn.execute("INSERT INTO aston_account_members (aston_account_id, user_id) VALUES (?, ?)", (account_id, owner_user_id))
+        row = conn.execute("SELECT * FROM aston_accounts WHERE id = ?", (account_id,)).fetchone()
         return row_to_dict(row)
 
 

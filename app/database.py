@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS aston_accounts (
     encrypted_password TEXT,
     created_by_user_id INTEGER NOT NULL,
     created_at TEXT NOT NULL,
-    UNIQUE(label)
+    UNIQUE(created_by_user_id, label)
 );
 
 CREATE TABLE IF NOT EXISTS aston_account_members (
@@ -189,6 +189,45 @@ def init_db(database_path: Path) -> None:
         ):
             if name not in rule_columns:
                 conn.execute(f"ALTER TABLE rules ADD COLUMN {name} {definition}")
+    _scope_account_labels_per_owner(database_path)
+
+
+def _scope_account_labels_per_owner(database_path: Path) -> None:
+    """Early databases made Aston account labels unique across all users, so a
+    second person could not name their account "My Aston account". SQLite
+    cannot drop a table constraint, so rebuild the table once."""
+    conn = sqlite3.connect(database_path)
+    try:
+        row = conn.execute("SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'aston_accounts'").fetchone()
+        if row is None or "UNIQUE(label)" not in row[0].replace(" ", ""):
+            return
+        conn.execute("PRAGMA foreign_keys = OFF")
+        conn.execute("BEGIN IMMEDIATE")
+        conn.execute(
+            """
+            CREATE TABLE aston_accounts_new (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                label TEXT NOT NULL,
+                credential_mode TEXT NOT NULL CHECK(credential_mode IN ('environment', 'stored')),
+                encrypted_username TEXT,
+                encrypted_password TEXT,
+                created_by_user_id INTEGER NOT NULL,
+                created_at TEXT NOT NULL,
+                UNIQUE(created_by_user_id, label)
+            )
+            """
+        )
+        conn.execute("INSERT INTO aston_accounts_new SELECT id, label, credential_mode, encrypted_username, encrypted_password, created_by_user_id, created_at FROM aston_accounts")
+        conn.execute("DROP TABLE aston_accounts")
+        conn.execute("ALTER TABLE aston_accounts_new RENAME TO aston_accounts")
+        problems = conn.execute("PRAGMA foreign_key_check").fetchall()
+        if problems:
+            conn.rollback()
+            raise RuntimeError(f"Aston account migration found broken references: {problems}")
+        conn.commit()
+    finally:
+        conn.execute("PRAGMA foreign_keys = ON")
+        conn.close()
 
 
 @contextmanager

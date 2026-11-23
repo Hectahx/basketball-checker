@@ -52,11 +52,6 @@ def filter_slots(rule: RuleOut, slots: list[Slot]) -> list[Slot]:
         slot_minutes = slot.start_time_local.hour * 60 + slot.start_time_local.minute
         if not start <= slot_minutes <= end:
             continue
-        # A preference is strict by default. This prevents a broad 12:00–17:00
-        # rule from taking a different user's preferred time just because its
-        # own preferred time was unavailable.
-        if rule.preferred_start_time and not rule.allow_fallback and slot.start_time_local.strftime("%H:%M") != rule.preferred_start_time:
-            continue
         if rule.max_price_pence is not None and slot.price_pence is not None and slot.price_pence > rule.max_price_pence:
             continue
         matched.append(slot)
@@ -69,9 +64,16 @@ def slot_groups(rule: RuleOut, slots: list[Slot]) -> list[list[Slot]]:
     by_resource: dict[tuple[str, str], dict[int, Slot]] = {}
     for slot in slots:
         by_resource.setdefault((slot.activity_id, slot.bookable_item_id), {})[slot.start_time_utc] = slot
+    # A preference is strict by default. This prevents a broad 12:00–17:00
+    # rule from taking a different user's preferred time just because its own
+    # preferred time was unavailable. It applies to the group's first hour only;
+    # the later hours of a multi-hour booking necessarily start later.
+    strict_start = rule.preferred_start_time if rule.preferred_start_time and not rule.allow_fallback else None
     candidates: list[list[Slot]] = []
     for resource_slots in by_resource.values():
         for start_utc, start_slot in resource_slots.items():
+            if strict_start and start_slot.start_time_local.strftime("%H:%M") != strict_start:
+                continue
             group = [resource_slots.get(start_utc + hour * 3600) for hour in range(needed)]
             if all(group):
                 candidates.append(group)  # type: ignore[arg-type]
@@ -89,6 +91,34 @@ def select_slot_group(rule: RuleOut, slots: list[Slot]) -> list[Slot] | None:
     return groups[0] if groups else None
 
 
+def _with_status(conn, rules: list[RuleOut]) -> list[RuleOut]:
+    """Attach the owner's name and the latest availability check to each rule."""
+    if not rules:
+        return rules
+    owners = {row["id"]: row["username"] for row in conn.execute("SELECT id, username FROM users")}
+    placeholders = ",".join("?" for _ in rules)
+    latest = {
+        row["rule_id"]: row
+        for row in conn.execute(
+            f"""
+            SELECT c.* FROM availability_checks c
+            JOIN (SELECT rule_id, MAX(id) AS id FROM availability_checks WHERE rule_id IN ({placeholders}) GROUP BY rule_id) m ON m.id = c.id
+            """,
+            [rule.id for rule in rules],
+        )
+    }
+    for rule in rules:
+        rule.owner_username = owners.get(rule.user_id)
+        check = latest.get(rule.id)
+        if check is not None:
+            rule.last_check_status = check["status"]
+            rule.last_check_at = datetime.fromisoformat(check["created_at"])
+            rule.last_check_slots = check["slot_count"]
+            rule.last_check_matched = check["matched_count"]
+            rule.last_check_error = check["error"]
+    return rules
+
+
 class RuleStore:
     def __init__(self, settings: Settings, user_id: int | None = None, is_admin: bool = True):
         self.settings = settings
@@ -104,16 +134,16 @@ class RuleStore:
         with get_conn(self.settings.database_path) as conn:
             clause, params = self._owned_clause()
             rows = conn.execute(f"SELECT * FROM rules{clause} ORDER BY enabled DESC, id DESC", params).fetchall()
-        return [_row_to_rule(row) for row in rows]
+            return _with_status(conn, [_row_to_rule(row) for row in rows])
 
     def get_rule(self, rule_id: int) -> RuleOut:
         with get_conn(self.settings.database_path) as conn:
             clause, params = self._owned_clause()
             connector = " AND" if clause else " WHERE"
             row = conn.execute(f"SELECT * FROM rules{clause}{connector} id = ?", (*params, rule_id)).fetchone()
-        if row is None:
-            raise KeyError(rule_id)
-        return _row_to_rule(row)
+            if row is None:
+                raise KeyError(rule_id)
+            return _with_status(conn, [_row_to_rule(row)])[0]
 
     def create_rule(self, rule: RuleCreate) -> RuleOut:
         now = iso_now()
@@ -201,6 +231,9 @@ class RuleStore:
         # another user's rule by guessing its numeric id.
         self.get_rule(rule_id)
         with get_conn(self.settings.database_path) as conn:
+            # Keep the rule's history and holds, detached from the deleted rule.
+            for table in ("availability_checks", "booking_attempts", "booking_holds"):
+                conn.execute(f"UPDATE {table} SET rule_id = NULL WHERE rule_id = ?", (rule_id,))
             conn.execute("DELETE FROM rules WHERE id = ?", (rule_id,))
 
     def mark_run(self, rule_id: int) -> None:
